@@ -51,6 +51,7 @@ class Engine:
         self.camera.move()
         self.scene_renderer.render()
         self.window.blit(self.overlay, (0, 0))
+        pg.draw.circle(self.overlay, (255, 255, 255), (self.WIN_SIZE[0]//2, self.WIN_SIZE[1]//2), 50)
         pg.display.flip()
 
     def get_time(self):
