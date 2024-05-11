@@ -1,0 +1,7 @@
+cat|Cat.jpg
+cactus|cactus.jpg
+wooden_box|img.png
+metal_box|img_1.png
+metal_grid|img_2.png
+test|test.png
+skybox|skybox|png
