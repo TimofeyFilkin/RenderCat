@@ -21,11 +21,11 @@ class Scene:
                 for line in mapfile:
                     value = line.split("|")
                     rawvalue = value[1].split(',')
-                    pos = (float(rawvalue[0]), float(rawvalue[1]), float(rawvalue[2]))
+                    pos = glm.vec3(float(rawvalue[0]), float(rawvalue[1]), float(rawvalue[2]))
                     rawvalue = value[2].split(',')
-                    rot = (float(rawvalue[0]), float(rawvalue[1]), float(rawvalue[2]))
+                    rot = glm.vec3(glm.radians(float(rawvalue[0])), glm.radians(float(rawvalue[1])), glm.radians(float(rawvalue[2])))
                     rawvalue = value[3].split(',')
-                    scale = (float(rawvalue[0]), float(rawvalue[1]), float(rawvalue[2]))
+                    scale = glm.vec3(float(rawvalue[0]), float(rawvalue[1]), float(rawvalue[2]))
                     objbuffer.append(Obj(vao_name=value[0], pos=pos, rot=rot, scale=scale,
                                          tex_id=value[4].rstrip(), attached_script=value[5].rstrip()))
                 mapfile.close()
@@ -36,7 +36,7 @@ class Scene:
             raise Exception("Map not found!")
         for i in objbuffer:
             if i.script != 'None':
-                with open(file=f"Scenes/{map_to_load}/{i.script}") as scr:
+                with open(file=f"Scenes/{map_to_load}/{i.script}.py") as scr:
                     src = scr.read()
             else:
                 src = ''

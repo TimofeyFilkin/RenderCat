@@ -3,7 +3,7 @@ import math
 
 
 class BaseModel:
-    def __init__(self, app, vao_name, tex_id, pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
+    def __init__(self, app, vao_name, tex_id, pos=glm.vec3(0, 0, 0), rot=glm.vec3(0, 0, 0), scale=glm.vec3(1, 1, 1)):
         self.vao_name = vao_name
         self.app = app
         self.pos = pos
@@ -21,7 +21,7 @@ class BaseModel:
         rot = list(self.rot)
         for i in range(0, 2):
             rot[i] = rot[i] / 180 * math.pi
-        m_model = glm.mat4()
+        m_model = glm.mat4(1.0)
         m_model = glm.translate(m_model, self.pos)
         m_model = glm.rotate(m_model, rot[0], glm.vec3(1, 0, 0))
         m_model = glm.rotate(m_model, rot[1], glm.vec3(0, 1, 0))
@@ -42,7 +42,18 @@ class ExtendedBaseModel(BaseModel):
         self.on_init()
 
     def update(self):
+        pos, rot, scale = self.pos, self.rot, self.scale
+        print()
         exec(self.script)
+        pos, rot, scale = self.pos, self.rot, self.scale
+        m_model = glm.mat4(1.0)
+        m_model = glm.translate(m_model, pos)
+        m_model = glm.rotate(m_model, rot[0], glm.vec3(1, 0, 0))
+        m_model = glm.rotate(m_model, rot[1], glm.vec3(0, 1, 0))
+        m_model = glm.rotate(m_model, rot[2], glm.vec3(0, 0, 1))
+        m_model = glm.scale(m_model, scale)
+        self.pos, self.rot, self.scale = pos, rot, scale
+        self.m_model = m_model
         self.texture.use(location=0)
         self.program['camPos'].write(self.camera.position)
         self.program['m_view'].write(self.camera.m_view)
