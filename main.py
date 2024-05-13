@@ -6,8 +6,8 @@ import RenderCat
 
 
 class Engine(RenderCat.Engine):
-    def tick(self):
-        pass
+    def __init__(self):
+        super().__init__((1920, 1080))
 
 
 if __name__ == '__main__':

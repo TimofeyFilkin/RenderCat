@@ -1,6 +1,8 @@
 import numpy as np
 import pywavefront
 
+from RenderCat import camera
+
 
 class VBO:
     # noinspection PyDictCreation
@@ -8,6 +10,7 @@ class VBO:
         self.vbos = {}
         self.vbos['cube'] = CubeVBO(ctx)
         self.vbos['skybox'] = SkyboxVBO(ctx)
+        self.vbos['overlay'] = OverlayVBO(ctx)
         vbos_to_load = []
         try:
             with open(file='object_list.txt', mode='r') as vbolist:
@@ -103,8 +106,22 @@ class SkyboxVBO(BaseVBO):
         return vertex_data
 
 
+class OverlayVBO(BaseVBO):
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.format = '3f'
+        self.attribs = ['in_position']
+
+    def get_vertex_data(self):
+        z = camera.ZNEAR
+        vertices = [(-1, -1, z), (1, -1, z), (-1, 1, z),
+                    (-1, 1, z), (1, -1, z), (1, 1, z)]
+        vertex_data = np.array(vertices, dtype='f4')
+        return vertex_data
+
+
 class LoadVBO(BaseVBO):
-    def __init__(self, app, file="Models/Cat.obj"):
+    def __init__(self, app, file=None):
         self.filename = file
         super().__init__(app)
         self.format = '2f 3f 3f'

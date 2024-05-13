@@ -3,8 +3,6 @@ class ShaderProgram:
         self.ctx = ctx
         # noinspection PyDictCreation
         self.shaders = {}
-        # self.shaders['skybox'] = self.get_prtogram('advanced_skybox')
-        # self.shaders['shadow_map'] = self.get_prtogram('shadow_map')
         self.shaders['default'] = self.ctx.program(vertex_shader='''
         #version 330 core
         
@@ -181,6 +179,32 @@ class ShaderProgram:
             fragColor = texture(u_texture_skybox, texCubeCoord);
         }
         ''')
+        self.shaders['overlay'] = self.ctx.program(
+            vertex_shader='''
+        #version 330 core
+        
+        layout (location = 0) in vec4 in_position;
+        
+        void main() {
+            gl_Position = vec4(in_position.xy, -1.0, 1.0);
+        }
+        ''', fragment_shader='''
+        #version 330 core
+        
+        out vec4 frag_color;
+        
+        uniform vec2 u_resolution;
+        uniform sampler2D u_texture_0;
+        
+        
+        void main() {
+            vec2 uv = vec2(gl_FragCoord.xy / u_resolution);
+            vec4 tex_col = texture(u_texture_0, uv);
+            if (tex_col.xyz == vec3(0.392156862745098, 0.7843137254901961, 0.0588235294117647)) discard;
+            frag_color = vec4(tex_col.xyz, 1.0);
+        }
+        '''
+        )
 
     def get_prtogram(self, shader_name):
         with open(f'Shaders/{shader_name}.vert') as file:

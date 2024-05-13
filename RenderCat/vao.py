@@ -16,6 +16,10 @@ class VAO:
         self.vaos['shadow_cube'] = self.get_vao(
             program=self.program.shaders['shadow_map'],
             vbo=self.vbo.vbos['cube'])
+        self.vaos['overlay'] = self.get_vao(
+            program=self.program.shaders['overlay'],
+            vbo=self.vbo.vbos['overlay']
+        )
         vaos_to_load = []
         try:
             with open(file="object_list.txt", mode='r') as vaolist:

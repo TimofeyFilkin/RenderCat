@@ -1,9 +1,6 @@
 import sys
 import moderngl as mgl
 import pygame as pg
-import win32api
-import win32con
-import win32gui
 from RenderCat.camera import Camera
 from RenderCat.light import Light
 from RenderCat.mesh import Mesh
@@ -14,7 +11,7 @@ from RenderCat.scene_renderer import SceneRenderer
 class Engine:
     def __init__(self, win_size=None):
         pg.init()
-        if win_size != None:
+        if win_size is not None:
             self.WIN_SIZE = win_size
         else:
             self.WIN_SIZE = pg.display.get_desktop_sizes()[0]
@@ -31,27 +28,31 @@ class Engine:
         self.mesh = Mesh(self)
         self.scene = Scene(self)
         self.scene_renderer = SceneRenderer(self)
-        self.overlay = pg.Surface(self.WIN_SIZE)
+        self.screen = pg.Surface(self.WIN_SIZE)
+        self.overlay = self.mesh.vao.vaos['overlay']
+        self.overlay.program['u_resolution'] = self.WIN_SIZE
 
     def check_events(self):
         for event in pg.event.get():
-            if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+            if event.type == pg.QUIT:
                 self.mesh.destroy()
                 self.scene_renderer.destroy()
-                pg.quit()
                 sys.exit()
-            elif event.type == pg.KEYDOWN and event.key == pg.K_F11:
-                pg.display.toggle_fullscreen()
 
     def render(self):
+        self.screen.fill((100, 200, 15))
         self.ctx.clear(color=(0.08, 0.16, 0.18))
-        dx, dy = pg.mouse.get_rel()
-        pg.mouse.set_pos((self.WIN_SIZE[0] / 2, self.WIN_SIZE[1] / 2))
-        self.camera.rotate(dx, dy)
-        self.camera.move()
+        self.tick()
         self.scene_renderer.render()
-        self.window.blit(self.overlay, (0, 0))
-        pg.draw.circle(self.overlay, (255, 255, 255), (self.WIN_SIZE[0]//2, self.WIN_SIZE[1]//2), 50)
+        texture = self.screen.convert()
+        texture = pg.transform.flip(texture, flip_x=False, flip_y=True)
+        texture = self.ctx.texture(size=self.WIN_SIZE, components=3,
+                                   data=pg.image.tostring(texture, 'RGB'))
+        texture.repeat_x = False
+        texture.repeat_y = False
+        self.overlay.program['u_texture_0'] = 1
+        texture.use(location=1)
+        self.overlay.render()
         pg.display.flip()
 
     def get_time(self):
@@ -61,12 +62,15 @@ class Engine:
         while True:
             self.get_time()
             self.check_events()
-            self.tick()
             self.render()
             self.delta_time = self.clock.tick(60)
 
     def tick(self):
-        ...
+        pg.draw.circle(self.screen, (0, 0, 0), (self.WIN_SIZE[0] // 2, self.WIN_SIZE[1] // 2), 10)
+        dx, dy = pg.mouse.get_rel()
+        pg.mouse.set_pos((self.WIN_SIZE[0] / 2, self.WIN_SIZE[1] / 2))
+        self.camera.rotate(dx, dy)
+        self.camera.move()
 
 
 print("RenderCat v.1")
