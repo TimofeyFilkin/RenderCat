@@ -71,6 +71,7 @@ class ExtendedBaseModel(BaseModel):
     # noinspection PyAttributeOutsideInit
     def on_init(self):
         self.program['m_view_light'].write(self.app.light.m_view_light)
+        self.program['fullbright'] = self.app.light.fullbright
         # resolution
         self.program['u_resolution'].write(glm.vec2(self.app.WIN_SIZE))
         # depth texture

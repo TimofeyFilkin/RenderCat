@@ -1,2 +1,1 @@
-self.rot = self.rot + glm.vec3(0, 0, 0.01)
-self.pos = self.pos + glm.vec3(0, 0.01, 0)
+self.m_model = glm.rotate(self.m_model, 0.01, glm.vec3(0, 0, 1))

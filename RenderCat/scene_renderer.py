@@ -16,8 +16,8 @@ class SceneRenderer:
     def render_shadows(self):
         self.depth_fbo.clear()
         self.depth_fbo.use()
-        for obj in self.scene.objects:
-            obj.render_shadow()
+        for obj in range(len(self.scene.objects)):
+            self.scene.objects[obj].render_shadow()
 
     def render(self):
         self.scene.update()

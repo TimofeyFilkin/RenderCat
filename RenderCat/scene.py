@@ -19,6 +19,8 @@ class Scene:
         try:
             with open(file=f"Scenes/{map_to_load}.rcs", mode='r') as mapfile:
                 for line in mapfile:
+                    if line[0] == "#" or line == "":
+                        continue
                     value = line.split("|")
                     rawvalue = value[1].split(',')
                     pos = glm.vec3(float(rawvalue[0]), float(rawvalue[1]), float(rawvalue[2]))

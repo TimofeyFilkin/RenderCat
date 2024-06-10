@@ -24,6 +24,8 @@ class VAO:
         try:
             with open(file="object_list.txt", mode='r') as vaolist:
                 for line in vaolist:
+                    if line[0] == "#" or line == "":
+                        continue
                     value = line.split("|")
                     vaos_to_load.append([obj.rstrip() for obj in value])
                 vaolist.close()

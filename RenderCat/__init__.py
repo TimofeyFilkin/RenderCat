@@ -9,21 +9,22 @@ from RenderCat.scene_renderer import SceneRenderer
 
 
 class Engine:
-    def __init__(self, win_size=None):
+    def __init__(self, win_size=None, shadow_res=(1920, 1080), fullbright=False):
         pg.init()
         if win_size is not None:
             self.WIN_SIZE = win_size
         else:
             self.WIN_SIZE = pg.display.get_desktop_sizes()[0]
+        self.shadow_res = shadow_res
         self.window = pg.display.set_mode(self.WIN_SIZE, flags=pg.OPENGL | pg.DOUBLEBUF | pg.NOFRAME)
         pg.event.set_grab(False)
         pg.mouse.set_visible(False)
         self.ctx = mgl.create_context()
-        self.ctx.enable(flags=mgl.DEPTH_TEST)
+        self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE)
         self.clock = pg.time.Clock()
         self.time = 0
         self.delta_time = 0
-        self.light = Light(position=(15, 15, -3))
+        self.light = Light(position=(15, 15, -3), fullbright=fullbright)
         self.camera = Camera(self, position=(0, 5, 15))
         self.mesh = Mesh(self)
         self.scene = Scene(self)
@@ -66,7 +67,6 @@ class Engine:
             self.delta_time = self.clock.tick(60)
 
     def tick(self):
-        pg.draw.circle(self.screen, (0, 0, 0), (self.WIN_SIZE[0] // 2, self.WIN_SIZE[1] // 2), 10)
         dx, dy = pg.mouse.get_rel()
         pg.mouse.set_pos((self.WIN_SIZE[0] / 2, self.WIN_SIZE[1] / 2))
         self.camera.rotate(dx, dy)

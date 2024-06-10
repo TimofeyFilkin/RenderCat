@@ -15,6 +15,8 @@ class VBO:
         try:
             with open(file='object_list.txt', mode='r') as vbolist:
                 for line in vbolist:
+                    if line[0] == "#" or line == "":
+                        continue
                     value = line.split("|")
                     vbos_to_load.append(value)
                 vbolist.close()

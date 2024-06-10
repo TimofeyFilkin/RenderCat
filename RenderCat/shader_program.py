@@ -46,6 +46,7 @@ class ShaderProgram:
         in vec3 normal;
         in vec3 fragPos;
         in vec4 shadowCoord;
+        uniform bool fullbright;
         uniform vec2 u_resolution;
         
         struct Light {
@@ -128,8 +129,9 @@ class ShaderProgram:
         void main(){
             float gamma = 2.2;
             vec3 col = texture(u_texture_0, uv_0).rgb;
-        
-            col = getLight(col);
+            if (!fullbright) {
+                col = getLight(col);
+            }
         
             col = pow(col, 1/vec3(gamma));
             FragColor = vec4(col, 1.0);

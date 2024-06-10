@@ -12,6 +12,8 @@ class Texture:
         try:
             with open(file="texture_list.txt", mode='r') as texlist:
                 for line in texlist:
+                    if line[0] == "#" or line == "":
+                        continue
                     value = line.split("|")
                     textures_to_load.append([tex.rstrip() for tex in value])
         except PermissionError:
@@ -26,7 +28,7 @@ class Texture:
         self.textures['depth_texture'] = self.get_depth_texture()
 
     def get_depth_texture(self):
-        depth_texture = self.ctx.depth_texture((self.app.WIN_SIZE[0] * 2, self.app.WIN_SIZE[1] * 2))
+        depth_texture = self.ctx.depth_texture(self.app.shadow_res)
         depth_texture.repeat_x = False
         depth_texture.repeat_y = False
         return depth_texture

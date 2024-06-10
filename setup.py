@@ -16,7 +16,7 @@ def requirements():
 
 setup(
     name='rendercat',
-    version='1.0.0',
+    version='1.2',
     author='TimofeyFilkin',
     author_email='timofejfilkin@gmail.com',
     description='3D engine made for pygame',
